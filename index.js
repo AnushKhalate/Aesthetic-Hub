@@ -9,7 +9,7 @@ const flash = require("connect-flash");
 const expressSession = require("express-session");
 
 // Database connection
-require("./config/mogoose-connection");
+const connectDatabase = require("./config/mogoose-connection");
 
 // Routers
 const userRouter = require("./routes/userRouter");
@@ -38,6 +38,23 @@ app.use(
 app.use(flash());
 
 app.use(express.static(path.join(__dirname, "public")));
+
+// Wait for MongoDB before every route
+app.use(async function (req, res, next) {
+    try {
+        await connectDatabase();
+        next();
+    } catch (error) {
+        console.error(
+            "Database middleware error:",
+            error.message
+        );
+
+        res.status(503).send(
+            "Database connection is temporarily unavailable."
+        );
+    }
+});
 
 // Routes
 app.use("/", indexRouter);
