@@ -47,6 +47,14 @@ app.use("/owners", ownerRouter);
 app.use("/products", productsRouter);
 app.use("/login", login);
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
-});
+// Run locally
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+// Export for Vercel
+module.exports = app;
