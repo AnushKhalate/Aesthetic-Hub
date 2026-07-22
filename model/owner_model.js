@@ -11,4 +11,4 @@ const ownerShema = mongoose.Schema({
 })
 
 
-module.exports=mongoose.model("owner",ownerShemaShema)
+module.exports=mongoose.model("owner",ownerShema)

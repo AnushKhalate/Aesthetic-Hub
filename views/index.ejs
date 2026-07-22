@@ -1,0 +1,280 @@
+<%- include('./partials/header') %>
+
+<div class="container-fluid bg-light min-vh-100">
+
+    <div class="row min-vh-100 g-0">
+
+        <!-- Left Branding Section -->
+        <div class="col-lg-6 d-none d-lg-flex">
+
+            <div
+                class="w-100 d-flex flex-column justify-content-center px-5 text-white"
+                style="background:#212529;"
+            >
+
+                <div class="px-xl-5">
+
+                    <span class="badge bg-warning text-dark fs-6 px-3 py-2 mb-4">
+                        SCATCH STORE
+                    </span>
+
+                    <h1 class="display-3 fw-bold mb-3">
+                        Create your account
+                    </h1>
+
+                    <p class="fs-4 text-light mb-4">
+                        Join Scatch and explore premium products made for every style.
+                    </p>
+
+                    <div class="d-flex align-items-center mb-3">
+
+                        <div
+                            class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style="width:48px;height:48px;font-size:22px;"
+                        >
+                            ✓
+                        </div>
+
+                        <div>
+                            <h5 class="mb-0 fw-bold">
+                                Simple Registration
+                            </h5>
+
+                            <small class="text-light">
+                                Create your account in a few seconds.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+
+                        <div
+                            class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style="width:48px;height:48px;font-size:22px;"
+                        >
+                            ✓
+                        </div>
+
+                        <div>
+                            <h5 class="mb-0 fw-bold">
+                                Secure Access
+                            </h5>
+
+                            <small class="text-light">
+                                Your account details remain protected.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex align-items-center">
+
+                        <div
+                            class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style="width:48px;height:48px;font-size:22px;"
+                        >
+                            ✓
+                        </div>
+
+                        <div>
+                            <h5 class="mb-0 fw-bold">
+                                Better Shopping
+                            </h5>
+
+                            <small class="text-light">
+                                Discover products and manage your experience.
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Registration Form Section -->
+        <div class="col-lg-6">
+
+            <div class="d-flex align-items-center justify-content-center min-vh-100 p-4">
+
+                <div style="width:100%;max-width:520px;">
+
+                    <div class="mb-4">
+
+                        <h2 class="display-6 fw-bold text-dark mb-2">
+                            Create Account
+                        </h2>
+
+                        <p class="text-muted fs-5 mb-0">
+                            Enter your information to get started.
+                        </p>
+
+                    </div>
+
+                    <% if (typeof error !== "undefined" && error.length > 0) { %>
+
+                        <div
+                            class="alert alert-danger border-0 shadow-sm rounded-3"
+                            role="alert"
+                        >
+                            <strong>Registration failed:</strong>
+                            <%= error %>
+                        </div>
+
+                    <% } %>
+
+                    <div class="card border-0 shadow-lg rounded-4">
+
+                        <div class="card-body p-4 p-md-5">
+
+                            <form action="/users/register" method="POST">
+
+                                <div class="mb-4">
+
+                                    <label
+                                        for="fullname"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Full Name
+                                    </label>
+
+                                    <div class="input-group input-group-lg">
+
+                                        <span class="input-group-text bg-white">
+                                            👤
+                                        </span>
+
+                                        <input
+                                            type="text"
+                                            id="fullname"
+                                            class="form-control"
+                                            name="fullName"
+                                            placeholder="Enter your full name"
+                                            autocomplete="name"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label
+                                        for="email"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Email Address
+                                    </label>
+
+                                    <div class="input-group input-group-lg">
+
+                                        <span class="input-group-text bg-white">
+                                            ✉
+                                        </span>
+
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            class="form-control"
+                                            name="email"
+                                            placeholder="Enter your email"
+                                            autocomplete="email"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label
+                                        for="password"
+                                        class="form-label fw-semibold"
+                                    >
+                                        Password
+                                    </label>
+
+                                    <div class="input-group input-group-lg">
+
+                                        <span class="input-group-text bg-white">
+                                            🔒
+                                        </span>
+
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            class="form-control"
+                                            name="password"
+                                            placeholder="Enter your password"
+                                            autocomplete="new-password"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <div class="form-text mt-2">
+                                        Use a strong password that is difficult to guess.
+                                    </div>
+
+                                </div>
+
+                                <div class="d-grid mb-4">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-warning btn-lg fw-semibold py-3"
+                                    >
+                                        Create Account
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                            <div class="position-relative my-4">
+
+                                <hr>
+
+                                <span
+                                    class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted"
+                                >
+                                    Already registered?
+                                </span>
+
+                            </div>
+
+                            <div class="d-grid">
+
+                                <a
+                                    href="/login"
+                                    class="btn btn-outline-dark btn-lg py-3"
+                                >
+                                    Login to your account
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <p class="text-center text-muted small mt-4 mb-0">
+                        By creating an account, you agree to the Scatch Store terms and policies.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include('./partials/footer') %>

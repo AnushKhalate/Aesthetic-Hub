@@ -3,7 +3,7 @@ const { default: mongoose } = require("mongoose")
 
 
 const productShema = mongoose.Schema({
-    image:String,
+    image:Buffer,
     name:String,
     price:Number,
     discount:Number,
@@ -13,4 +13,4 @@ const productShema = mongoose.Schema({
 })
 
 
-module.exports=mongoose.model("User",productShema)
+module.exports=mongoose.model("Product",productShema)

@@ -1,0 +1,3 @@
+{
+    "MONGODB_URI":"MONGODB_URI=mongodb+srv://viper_db_user:YOUR_PASSWORD@miniprojectcluster.zcsd9bv.mongodb.net/Aesthetic_Hub?retryWrites=true&w=majority&appName=MiniProjectCluster"
+}

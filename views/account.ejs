@@ -1,0 +1,253 @@
+<%- include("./partials/header") %>
+<%- include("./partials/navbar") %>
+
+<div class="container py-5">
+
+    <% if (typeof success !== "undefined" && success.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+            <i class="ri-checkbox-circle-line me-2"></i>
+            <%= success[0] %>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+        </div>
+    <% } %>
+
+    <% if (typeof error !== "undefined" && error.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm">
+            <i class="ri-error-warning-line me-2"></i>
+            <%= error[0] %>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+        </div>
+    <% } %>
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9">
+
+            <div class="card border-0 shadow-lg overflow-hidden">
+
+                <div class="row g-0">
+
+                    <!-- Profile Sidebar -->
+                    <div class="col-lg-4 bg-dark text-white">
+
+                        <div class="p-5 text-center">
+
+                            <div
+                                class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                                style="width: 110px; height: 110px;"
+                            >
+                                <i
+                                    class="ri-user-3-fill"
+                                    style="font-size: 55px;"
+                                ></i>
+                            </div>
+
+                            <h3 class="fw-bold mb-2">
+                                <%= user.fullname || user.name || "Scatch User" %>
+                            </h3>
+
+                            <p class="text-white-50 mb-4">
+                                <%= user.email %>
+                            </p>
+
+                            <a href="/shop" class="btn btn-warning w-100 mb-3">
+                                <i class="ri-store-2-line me-1"></i>
+                                Continue Shopping
+                            </a>
+
+                            <a
+                                href="/users/logout"
+                                class="btn btn-outline-light w-100"
+                            >
+                                <i class="ri-logout-box-r-line me-1"></i>
+                                Logout
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Account Details -->
+                    <div class="col-lg-8 bg-white">
+
+                        <div class="p-4 p-md-5">
+
+                            <div class="mb-4">
+
+                                <h2 class="fw-bold mb-1">
+                                    My Account
+                                </h2>
+
+                                <p class="text-muted mb-0">
+                                    View your personal information and shopping details.
+                                </p>
+
+                            </div>
+
+                            <div class="card bg-light border-0 mb-4">
+
+                                <div class="card-body p-4">
+
+                                    <h5 class="fw-bold mb-4">
+                                        <i class="ri-user-line me-2"></i>
+                                        Personal Information
+                                    </h5>
+
+                                    <div class="row g-4">
+
+                                        <div class="col-md-6">
+
+                                            <label class="form-label text-muted">
+                                                Full Name
+                                            </label>
+
+                                            <div class="form-control bg-white py-3">
+                                                <%= user.fullName || user.name || "Not available" %>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+
+                                            <label class="form-label text-muted">
+                                                Email Address
+                                            </label>
+
+                                            <div class="form-control bg-white py-3">
+                                                <%= user.email %>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <div class="card border-0 bg-light h-100">
+
+                                        <div class="card-body p-4">
+
+                                            <div class="d-flex align-items-center">
+
+                                                <div
+                                                    class="bg-warning rounded-3 d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 55px; height: 55px;"
+                                                >
+                                                    <i
+                                                        class="ri-shopping-cart-2-line fs-3"
+                                                    ></i>
+                                                </div>
+
+                                                <div>
+
+                                                    <p class="text-muted mb-1">
+                                                        Cart Products
+                                                    </p>
+
+                                                    <h3 class="fw-bold mb-0">
+                                                        <%= user.cart ? user.cart.length : 0 %>
+                                                    </h3>
+
+                                                </div>
+
+                                            </div>
+
+                                            <a
+                                                href="/cart"
+                                                class="btn btn-dark w-100 mt-4"
+                                            >
+                                                View My Cart
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="card border-0 bg-light h-100">
+
+                                        <div class="card-body p-4">
+
+                                            <div class="d-flex align-items-center">
+
+                                                <div
+                                                    class="bg-warning rounded-3 d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 55px; height: 55px;"
+                                                >
+                                                    <i
+                                                        class="ri-shield-check-line fs-3"
+                                                    ></i>
+                                                </div>
+
+                                                <div>
+
+                                                    <p class="text-muted mb-1">
+                                                        Account Status
+                                                    </p>
+
+                                                    <h5 class="fw-bold text-success mb-0">
+                                                        Active
+                                                    </h5>
+
+                                                </div>
+
+                                            </div>
+
+                                            <a
+                                                href="/shop"
+                                                class="btn btn-outline-dark w-100 mt-4"
+                                            >
+                                                Browse Products
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="alert alert-warning mt-4 mb-0">
+
+                                <i class="ri-information-line me-2"></i>
+
+                                Keep your account password private and never share it
+                                with anyone.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include("./partials/footer") %>

@@ -1,0 +1,282 @@
+<%- include("./partials/header") %>
+<%- include("./partials/navbar") %>
+
+<div class="container py-5">
+
+    <% if (typeof success !== "undefined" && success.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+            <i class="ri-checkbox-circle-line me-2"></i>
+            <%= success[0] %>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+        </div>
+    <% } %>
+
+    <% if (typeof error !== "undefined" && error.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm">
+            <i class="ri-error-warning-line me-2"></i>
+            <%= error[0] %>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+        </div>
+    <% } %>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold mb-1">
+                <i class="ri-file-list-3-line me-2"></i>
+                My Orders
+            </h1>
+
+            <p class="text-muted mb-0">
+                View your previous purchases and payment details.
+            </p>
+        </div>
+
+        <a href="/shop" class="btn btn-outline-dark">
+            <i class="ri-arrow-left-line me-1"></i>
+            Continue Shopping
+        </a>
+
+    </div>
+
+    <% if (orders && orders.length > 0) { %>
+
+        <% orders.forEach(function(order) { %>
+
+            <div class="card border-0 shadow-sm mb-4 overflow-hidden">
+
+                <div class="card-header bg-dark text-white p-4">
+
+                    <div class="row align-items-center g-3">
+
+                        <div class="col-md-4">
+
+                            <small class="text-white-50 d-block">
+                                Order ID
+                            </small>
+
+                            <strong>
+                                <%= order._id %>
+                            </strong>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <small class="text-white-50 d-block">
+                                Order Date
+                            </small>
+
+                            <strong>
+                                <%= new Date(order.createdAt).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric"
+                                }) %>
+                            </strong>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <small class="text-white-50 d-block">
+                                Payment
+                            </small>
+
+                            <% if (order.paymentStatus === "paid") { %>
+
+                                <span class="badge bg-success">
+                                    Paid
+                                </span>
+
+                            <% } else if (order.paymentStatus === "failed") { %>
+
+                                <span class="badge bg-danger">
+                                    Failed
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                        <div class="col-md-3 text-md-end">
+
+                            <small class="text-white-50 d-block">
+                                Total Amount
+                            </small>
+
+                            <h4 class="fw-bold text-warning mb-0">
+                                ₹<%= Number(order.totalAmount).toLocaleString("en-IN") %>
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <% if (order.products && order.products.length > 0) { %>
+
+                        <% order.products.forEach(function(item, index) { %>
+
+                            <div
+                                class="row align-items-center py-3 <%= index !== order.products.length - 1 ? 'border-bottom' : '' %>"
+                            >
+
+                                <div class="col-md-7">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div
+                                            class="bg-light rounded-3 d-flex align-items-center justify-content-center me-3"
+                                            style="width: 65px; height: 65px;"
+                                        >
+                                            <i
+                                                class="ri-shopping-bag-3-line text-muted"
+                                                style="font-size: 30px;"
+                                            ></i>
+                                        </div>
+
+                                        <div>
+
+                                            <h5 class="fw-bold mb-1">
+                                                <%= item.name %>
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Quantity: 1
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-2 mt-3 mt-md-0">
+
+                                    <small class="text-muted d-block">
+                                        Price
+                                    </small>
+
+                                    <strong>
+                                        ₹<%= Number(item.price).toLocaleString("en-IN") %>
+                                    </strong>
+
+                                </div>
+
+                                <div class="col-md-3 mt-3 mt-md-0 text-md-end">
+
+                                    <span class="badge bg-info text-dark px-3 py-2">
+                                        <%= order.orderStatus || "placed" %>
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        <% }) %>
+
+                    <% } else { %>
+
+                        <p class="text-muted mb-0">
+                            Product information is unavailable.
+                        </p>
+
+                    <% } %>
+
+                </div>
+
+                <div class="card-footer bg-white p-4">
+
+                    <div class="row align-items-center g-3">
+
+                        <div class="col-md-8">
+
+                            <p class="mb-1">
+                                <strong>Razorpay Payment ID:</strong>
+                                <%= order.razorpayPaymentId || "Not available" %>
+                            </p>
+
+                            <p class="text-muted small mb-0">
+                                Your payment was successfully verified and the order was placed.
+                            </p>
+
+                        </div>
+
+                        <div class="col-md-4 text-md-end">
+
+                            <a
+                                href="/order/<%= order._id %>"
+                                class="btn btn-dark"
+                            >
+                                <i class="ri-eye-line me-1"></i>
+                                View Details
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <% }) %>
+
+    <% } else { %>
+
+        <div class="card border-0 shadow-sm text-center">
+
+            <div class="card-body p-5">
+
+                <div
+                    class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                    style="width: 120px; height: 120px;"
+                >
+                    <i
+                        class="ri-file-list-3-line text-muted"
+                        style="font-size: 60px;"
+                    ></i>
+                </div>
+
+                <h2 class="fw-bold">
+                    No orders yet
+                </h2>
+
+                <p class="text-muted mb-4">
+                    You have not completed any purchases yet.
+                </p>
+
+                <a href="/shop" class="btn btn-warning btn-lg px-4">
+                    <i class="ri-store-2-line me-1"></i>
+                    Start Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+<%- include("./partials/footer") %>

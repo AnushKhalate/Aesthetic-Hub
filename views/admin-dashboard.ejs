@@ -1,0 +1,559 @@
+<%- include("./partials/header") %>
+<%- include("./partials/admin-navbar") %>
+
+<div class="container-fluid py-5">
+
+    <div class="container">
+
+        <% if (typeof success !== "undefined" && success.length > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show shadow-sm">
+                <i class="ri-checkbox-circle-line me-2"></i>
+                <%= success[0] %>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+            </div>
+        <% } %>
+
+        <% if (typeof error !== "undefined" && error.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm">
+                <i class="ri-error-warning-line me-2"></i>
+                <%= error[0] %>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+            </div>
+        <% } %>
+
+        <!-- Page Heading -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5">
+
+            <div>
+                <h1 class="fw-bold mb-1">
+                    Admin Dashboard
+                </h1>
+
+                <p class="text-muted mb-0">
+                    Manage your products, customers, orders and payments.
+                </p>
+            </div>
+
+            <a
+                href="/owners/createproducts"
+                class="btn btn-warning fw-bold px-4 py-3 mt-3 mt-md-0"
+            >
+                <i class="ri-add-circle-line me-1"></i>
+                Add New Product
+            </a>
+
+        </div>
+
+        <!-- Statistics -->
+        <div class="row g-4 mb-5">
+
+            <div class="col-md-6 col-xl-3">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <p class="text-muted mb-2">
+                                    Total Products
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    <%= typeof totalProducts !== "undefined" ? totalProducts : 0 %>
+                                </h2>
+                            </div>
+
+                            <div
+                                class="bg-warning rounded-4 d-flex align-items-center justify-content-center"
+                                style="width:65px;height:65px;"
+                            >
+                                <i class="ri-shopping-bag-3-line fs-2"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <p class="text-muted mb-2">
+                                    Total Customers
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    <%= typeof totalCustomers !== "undefined" ? totalCustomers : 0 %>
+                                </h2>
+                            </div>
+
+                            <div
+                                class="bg-info-subtle text-info rounded-4 d-flex align-items-center justify-content-center"
+                                style="width:65px;height:65px;"
+                            >
+                                <i class="ri-user-3-line fs-2"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <p class="text-muted mb-2">
+                                    Paid Orders
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    <%= typeof totalOrders !== "undefined" ? totalOrders : 0 %>
+                                </h2>
+                            </div>
+
+                            <div
+                                class="bg-success-subtle text-success rounded-4 d-flex align-items-center justify-content-center"
+                                style="width:65px;height:65px;"
+                            >
+                                <i class="ri-file-list-3-line fs-2"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <p class="text-muted mb-2">
+                                    Total Revenue
+                                </p>
+
+                                <h2 class="fw-bold text-success mb-0">
+                                    ₹<%= Number(
+                                        typeof totalRevenue !== "undefined"
+                                            ? totalRevenue
+                                            : 0
+                                    ).toLocaleString("en-IN") %>
+                                </h2>
+                            </div>
+
+                            <div
+                                class="bg-danger-subtle text-danger rounded-4 d-flex align-items-center justify-content-center"
+                                style="width:65px;height:65px;"
+                            >
+                                <i class="ri-money-rupee-circle-line fs-2"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+      
+
+        <!-- Product Management -->
+        <div class="card border-0 shadow-sm mb-5">
+
+            <div class="card-header bg-dark text-white p-4">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h4 class="fw-bold mb-1">
+                            Product Management
+                        </h4>
+
+                        <p class="text-white-50 mb-0">
+                            Manage all products available in your store.
+                        </p>
+                    </div>
+
+                    <span class="badge bg-warning text-dark fs-6">
+                        <%= products ? products.length : 0 %> Products
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="card-body p-0">
+
+                <% if (products && products.length > 0) { %>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+                                    <th class="ps-4">Product</th>
+                                    <th>Price</th>
+                                    <th>Discount</th>
+                                    
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <% products.forEach(function(product) { %>
+
+                                    <%
+                                        const price = Number(product.price || 0);
+                                        const discount = Number(product.discount || 0);
+                                        const finalPrice =
+                                            price - (price * discount / 100);
+                                    %>
+
+                                    <tr>
+
+                                        <td class="ps-4">
+
+                                            <div class="d-flex align-items-center">
+
+                                                <div
+                                                    class="bg-light rounded-3 d-flex align-items-center justify-content-center me-3"
+                                                    style="width:75px;height:75px;"
+                                                >
+
+                                                    <% if (product.image) { %>
+
+                                                        <img
+                                                            src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                                            alt="<%= product.name %>"
+                                                            class="img-fluid"
+                                                            style="
+                                                                width:65px;
+                                                                height:65px;
+                                                                object-fit:contain;
+                                                            "
+                                                        >
+
+                                                    <% } else { %>
+
+                                                        <i
+                                                            class="ri-image-line text-muted fs-2"
+                                                        ></i>
+
+                                                    <% } %>
+
+                                                </div>
+
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">
+                                                        <%= product.name %>
+                                                    </h6>
+
+                                                    <small class="text-muted">
+                                                        ID: <%= product._id %>
+                                                    </small>
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                ₹<%= price.toLocaleString("en-IN") %>
+                                            </strong>
+                                        </td>
+
+                                        <td>
+
+                                            <% if (discount > 0) { %>
+
+                                                <span class="badge bg-success">
+                                                    <%= discount %>% OFF
+                                                </span>
+
+                                            <% } else { %>
+
+                                                <span class="badge bg-secondary">
+                                                    No discount
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+                                       
+
+                                        <td class="text-end pe-4">
+
+                                            <a
+                                                href="/products/edit/<%= product._id %>"
+                                                class="btn btn-sm btn-outline-primary me-2"
+                                            >
+                                                <i class="ri-edit-line"></i>
+                                                Edit
+                                            </a>
+
+                                            <form
+                                                action="/products/delete/<%= product._id %>"
+                                                method="POST"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to delete this product?')"
+                                            >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                >
+                                                    <i class="ri-delete-bin-line"></i>
+                                                    Delete
+                                                </button>
+
+                                            </form>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="text-center p-5">
+
+                        <i
+                            class="ri-shopping-bag-3-line text-muted"
+                            style="font-size:70px;"
+                        ></i>
+
+                        <h3 class="fw-bold mt-3">
+                            No products found
+                        </h3>
+
+                        <p class="text-muted">
+                            Add your first product to start selling.
+                        </p>
+
+                        <a
+                            href="/owners/create-product"
+                            class="btn btn-warning fw-bold"
+                        >
+                            Add Product
+                        </a>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white p-4">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h4 class="fw-bold mb-1">
+                            Recent Orders
+                        </h4>
+
+                        <p class="text-muted mb-0">
+                            Latest paid orders placed by customers.
+                        </p>
+                    </div>
+
+                   
+
+                </div>
+
+            </div>
+
+            <div class="card-body p-0">
+
+                <% if (recentOrders && recentOrders.length > 0) { %>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+                                    <th class="ps-4">Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Products</th>
+                                    <th>Amount</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <% recentOrders.forEach(function(order) { %>
+
+                                    <tr>
+
+                                        <td class="ps-4">
+                                            <small class="fw-semibold">
+                                                <%= order._id %>
+                                            </small>
+                                        </td>
+
+                                        <td>
+                                            <% if (order.user) { %>
+                                                <strong>
+                                                    <%= order.user.fullname || order.user.name || "Customer" %>
+                                                </strong>
+
+                                                <small class="text-muted d-block">
+                                                    <%= order.user.email || "" %>
+                                                </small>
+                                            <% } else { %>
+                                                <span class="text-muted">
+                                                    User unavailable
+                                                </span>
+                                            <% } %>
+                                        </td>
+
+                                        <td>
+                                            <%= order.products ? order.products.length : 0 %>
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                ₹<%= Number(order.totalAmount || 0).toLocaleString("en-IN") %>
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            <% if (order.paymentStatus === "paid") { %>
+                                                <span class="badge bg-success">
+                                                    Paid
+                                                </span>
+                                            <% } else if (order.paymentStatus === "failed") { %>
+                                                <span class="badge bg-danger">
+                                                    Failed
+                                                </span>
+                                            <% } else { %>
+                                                <span class="badge bg-warning text-dark">
+                                                    Pending
+                                                </span>
+                                            <% } %>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge bg-info text-dark text-capitalize">
+                                                <%= order.orderStatus || "placed" %>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <%= new Date(order.createdAt).toLocaleDateString("en-IN", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric"
+                                            }) %>
+                                        </td>
+
+                                        <td class="text-end pe-4">
+                                            
+                                            
+                                        </td>
+
+                                    </tr>
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="text-center p-5">
+
+                        <i
+                            class="ri-file-list-3-line text-muted"
+                            style="font-size:65px;"
+                        ></i>
+
+                        <h4 class="fw-bold mt-3">
+                            No orders yet
+                        </h4>
+
+                        <p class="text-muted mb-0">
+                            Paid customer orders will appear here.
+                        </p>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include("./partials/footer") %>

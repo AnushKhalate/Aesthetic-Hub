@@ -1,0 +1,199 @@
+<%- include('./partials/header') %>
+<%- include("./partials/admin-navbar") %>
+
+<div class="container-fluid bg-light min-vh-100">
+
+    <!-- Hero Section -->
+    <div class="container py-4">
+
+        <div class="bg-dark text-white rounded-4 shadow-lg p-5">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+     
+                    <h1 class="display-4 fw-bold">
+                        Scatch Admin
+                    </h1>
+
+                    <p class="lead mb-4">
+                        Manage your products quickly and efficiently.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-end">
+
+                    <h1 class="fw-bold">
+                        <%= products ? products.length : 0 %> Products
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Products -->
+    <div class="container pb-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h2 class="fw-bold">
+                    All Products
+                </h2>
+
+                <p class="text-muted">
+                    Manage your products from here.
+                </p>
+
+            </div>
+
+            <span class="badge bg-dark fs-6">
+                <%= products ? products.length : 0 %> Items
+            </span>
+
+        </div>
+
+        <% if (products && products.length > 0) { %>
+
+            <div class="row g-4">
+
+                <% products.forEach(function(product) { %>
+
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+
+                        <div class="card border-0 shadow rounded-4 h-100">
+
+                            <div
+                                class="d-flex justify-content-center align-items-center rounded-top-4"
+                               
+                            >
+
+                                <% if (product.image) { %>
+
+                                    <img
+                                        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                        class="img-fluid"
+                                        style="
+                                            max-height: 210px;
+                                            object-fit: contain;
+                                        "
+                                        alt="<%= product.name %>"
+                                    >
+
+                                <% } else { %>
+
+                                    <p class="text-muted mb-0">
+                                        No image
+                                    </p>
+
+                                <% } %>
+
+                            </div>
+
+                            <div
+                                class="card-body"
+                               
+                            >
+
+                                <h5 class="fw-bold">
+                                    <%= product.name %>
+                                </h5>
+
+                                <h3 class="fw-bold text-danger">
+                                    ₹ <%= product.price %>
+                                </h3>
+
+                                <% if (product.discount) { %>
+
+                                    <span class="badge bg-success fs-6">
+                                        <%= product.discount %>% OFF
+                                    </span>
+
+                                <% } %>
+
+                            </div>
+
+                            <div class="card-footer bg-white border-0">
+
+                                <div class="d-grid gap-2">
+
+                                    <!-- Edit button -->
+                                    <a
+                                        href="/products/edit/<%= product._id %>"
+                                        class="btn btn-dark"
+                                    >
+                                        ✏ Edit Product
+                                    </a>
+
+                                    <!-- Delete button -->
+                                    <form
+                                        action="/products/delete/<%= product._id %>"
+                                        method="POST"
+                                        onsubmit="return confirmDelete('<%= product.name %>')"
+                                    >
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger w-100"
+                                        >
+                                            🗑 Delete Product
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body text-center py-5">
+
+                    <h2 class="text-secondary">
+                        No Products Available
+                    </h2>
+
+                    <p class="text-muted mb-4">
+                        Create your first product to display it here.
+                    </p>
+
+                    <a
+                        href="/owners/createproducts"
+                        class="btn btn-primary btn-lg"
+                    >
+                        ➕ Create Product
+                    </a>
+
+                </div>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+<script>
+    function confirmDelete(productName) {
+        return confirm(
+            `Are you sure you want to delete "${productName}"?`
+        );
+    }
+</script>
+
+<%- include('./partials/footer') %>

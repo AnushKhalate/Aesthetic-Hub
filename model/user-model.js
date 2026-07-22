@@ -5,8 +5,10 @@ const userShema = mongoose.Schema({
     fullName:String,
     email:String,
     password:String,
-    cart:[],
-    isadmin:Boolean,
+    cart:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Product"
+    }],
     order:[],
     contact:Number,
     pictuer:String

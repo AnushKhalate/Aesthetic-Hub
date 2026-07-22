@@ -1,0 +1,340 @@
+<%- include("./partials/header") %>
+<%- include("./partials/navbar") %>
+
+<div class="container py-5">
+
+    <div
+        id="paymentMessage"
+        class="alert d-none"
+        role="alert"
+    ></div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="mb-4">
+                        <h2 class="fw-bold mb-1">
+                            Checkout
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Review your products before completing payment.
+                        </p>
+                    </div>
+
+                    <% cart.forEach(function(product) { %>
+
+                        <div
+                            class="d-flex align-items-center border-bottom py-4"
+                        >
+
+                            <div
+                                class="bg-light rounded-3 d-flex align-items-center justify-content-center me-4"
+                                style="width: 100px; height: 100px;"
+                            >
+
+                                <% if (product.image) { %>
+
+                                    <img
+                                        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                        alt="<%= product.name %>"
+                                        class="img-fluid"
+                                        style="
+                                            max-width: 85px;
+                                            max-height: 85px;
+                                            object-fit: contain;
+                                        "
+                                    >
+
+                                <% } else { %>
+
+                                    <i
+                                        class="ri-image-line text-muted"
+                                        style="font-size: 38px;"
+                                    ></i>
+
+                                <% } %>
+
+                            </div>
+
+                            <div class="flex-grow-1">
+
+                                <h5 class="fw-bold mb-1">
+                                    <%= product.name %>
+                                </h5>
+
+                                <p class="text-muted mb-0">
+                                    Quantity: 1
+                                </p>
+
+                            </div>
+
+                            <h5 class="fw-bold mb-0">
+                                ₹<%= Number(product.price).toLocaleString("en-IN") %>
+                            </h5>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Payment Summary
+                    </h4>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">
+                            Products
+                        </span>
+
+                        <strong>
+                            <%= cart.length %>
+                        </strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">
+                            Subtotal
+                        </span>
+
+                        <strong>
+                            ₹<%= Number(total).toLocaleString("en-IN") %>
+                        </strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">
+                            Shipping
+                        </span>
+
+                        <strong class="text-success">
+                            Free
+                        </strong>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <h5 class="fw-bold">
+                            Total
+                        </h5>
+
+                        <h4 class="fw-bold text-danger">
+                            ₹<%= Number(total).toLocaleString("en-IN") %>
+                        </h4>
+                    </div>
+
+                    <button
+                        id="payNowButton"
+                        type="button"
+                        class="btn btn-warning w-100 py-3 fw-bold"
+                    >
+                        <i class="ri-secure-payment-line me-1"></i>
+                        Pay ₹<%= Number(total).toLocaleString("en-IN") %>
+                    </button>
+
+                    <a
+                        href="/cart"
+                        class="btn btn-outline-dark w-100 mt-3"
+                    >
+                        Return to Cart
+                    </a>
+
+                    <p class="small text-muted text-center mt-3 mb-0">
+                        Payments are securely processed through Razorpay.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    const payNowButton =
+        document.getElementById("payNowButton");
+
+    const paymentMessage =
+        document.getElementById("paymentMessage");
+
+    function showMessage(message, type) {
+        paymentMessage.className =
+            `alert alert-${type}`;
+
+        paymentMessage.textContent = message;
+    }
+
+    payNowButton.addEventListener("click", async function () {
+        try {
+            payNowButton.disabled = true;
+
+            payNowButton.innerHTML = `
+                <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                ></span>
+                Creating payment...
+            `;
+
+            const createOrderResponse = await fetch(
+                "/payment/create-order",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            const orderData =
+                await createOrderResponse.json();
+
+            if (
+                !createOrderResponse.ok ||
+                !orderData.success
+            ) {
+                throw new Error(
+                    orderData.message ||
+                    "Unable to create payment."
+                );
+            }
+
+            const options = {
+                key: orderData.keyId,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "Scatch Store",
+                description: "Scatch Store purchase",
+                order_id: orderData.orderId,
+
+                prefill: {
+                    name: orderData.customer.name,
+                    email: orderData.customer.email
+                },
+
+                theme: {
+                    color: "#ffc107"
+                },
+
+                handler: async function (response) {
+                    try {
+                        showMessage(
+                            "Payment received. Verifying...",
+                            "info"
+                        );
+
+                        const verifyResponse = await fetch(
+                            "/payment/verify",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+                                body: JSON.stringify({
+                                    razorpay_order_id:
+                                        response.razorpay_order_id,
+
+                                    razorpay_payment_id:
+                                        response.razorpay_payment_id,
+
+                                    razorpay_signature:
+                                        response.razorpay_signature
+                                })
+                            }
+                        );
+
+                        const verifyData =
+                            await verifyResponse.json();
+
+                        if (
+                            !verifyResponse.ok ||
+                            !verifyData.success
+                        ) {
+                            throw new Error(
+                                verifyData.message ||
+                                "Payment verification failed."
+                            );
+                        }
+
+                        window.location.href =
+                            `/payment-success?orderId=${encodeURIComponent(
+                                verifyData.orderId
+                            )}`;
+                    } catch (error) {
+                        showMessage(
+                            error.message,
+                            "danger"
+                        );
+
+                        payNowButton.disabled = false;
+                        payNowButton.innerHTML = `
+                            <i class="ri-secure-payment-line me-1"></i>
+                            Try Payment Again
+                        `;
+                    }
+                },
+
+                modal: {
+                    ondismiss: function () {
+                        payNowButton.disabled = false;
+
+                        payNowButton.innerHTML = `
+                            <i class="ri-secure-payment-line me-1"></i>
+                            Pay Now
+                        `;
+                    }
+                }
+            };
+
+            const paymentObject =
+                new Razorpay(options);
+
+            paymentObject.on(
+                "payment.failed",
+                function (response) {
+                    const message =
+                        response.error.description ||
+                        "Payment failed. Please try again.";
+
+                    showMessage(message, "danger");
+                }
+            );
+
+            paymentObject.open();
+        } catch (error) {
+            showMessage(error.message, "danger");
+        } finally {
+            payNowButton.disabled = false;
+
+            payNowButton.innerHTML = `
+                <i class="ri-secure-payment-line me-1"></i>
+                Pay Now
+            `;
+        }
+    });
+</script>
+
+<%- include("./partials/footer") %>

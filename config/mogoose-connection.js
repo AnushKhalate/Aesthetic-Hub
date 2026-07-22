@@ -1,11 +1,15 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/Asthetic_Hub")
-.then(function(){
-    console.log("db connected sucssefully")
-})
-.catch(function(err){
-    console.log(err)
-})
+const mongoUri = process.env.MONGODB_URI;
 
-module.exports=mongoose.connection;
+mongoose
+    .connect(mongoUri)
+    .then(() => {
+        console.log("✅ MongoDB Atlas Connected Successfully");
+    })
+    .catch((err) => {
+        console.log("❌ Database connection failed");
+        console.log(err.message);
+    });
+
+module.exports = mongoose.connection;
