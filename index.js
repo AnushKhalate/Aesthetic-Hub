@@ -1,53 +1,52 @@
 require("dotenv").config();
+
 const express = require("express");
 const app = express();
 
 const cookieparser = require("cookie-parser");
 const path = require("path");
-const flash = require('connect-flash')
-const expressSession = require('express-session')
-const crypto = require('crypto');
-const razorpayInstance = require("./config/razorpay");
+const flash = require("connect-flash");
+const expressSession = require("express-session");
 
-
-// DB connection
-const db = require("./config/mogoose-connection");
+// Database connection
+require("./config/mogoose-connection");
 
 // Routers
 const userRouter = require("./routes/userRouter");
 const ownerRouter = require("./routes/ownerRouter");
 const productsRouter = require("./routes/productsRouter");
 const indexRouter = require("./routes/indexRouter");
-const login = require("./routes/loginRouter");
+const loginRouter = require("./routes/loginRouter");
 
-// Basic settings
+// EJS setup
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser());
 
+app.use(
+    expressSession({
+        resave: false,
+        saveUninitialized: false,
+        secret: process.env.EXPRESS_SESSION_SECRET
+    })
+);
 
-//it dont give session to anauthrized user    d
-app.use(expressSession({
-    resave:false,
-    saveUninitialized:false,
-    secret:process.env.EXPRESS_SESSION_SECRET
-}))
 app.use(flash());
 
-// Static folder
-app.use(express.static(path.join(__dirname, "public"))); 
-
-// EJS setup
-app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/", indexRouter);
 app.use("/users", userRouter);
 app.use("/owners", ownerRouter);
 app.use("/products", productsRouter);
-app.use("/login", login);
+app.use("/login", loginRouter);
 
-// Run locally
+// Local server
 if (require.main === module) {
     const PORT = process.env.PORT || 3000;
 
@@ -56,5 +55,5 @@ if (require.main === module) {
     });
 }
 
-// Export for Vercel
+// Vercel export
 module.exports = app;
