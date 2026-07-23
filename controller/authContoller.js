@@ -41,68 +41,94 @@ module.exports.registerUser=async (req,res)=>{
     }
 }
 
-
-module.exports.loginUser = async (req, res) => {
+module.exports.loginUser = async function (req, res) {
     try {
+        let { email, password } = req.body;
 
-        const { email, password } = req.body;
+        email = email?.trim().toLowerCase();
 
-        const user = await userModel.findOne({ email });
+        if (!email || !password) {
+            req.flash("error", "Email and password are required.");
+            return res.redirect("/login");
+        }
+
+        // Check owner first
         const owner = await ownerModel.findOne({ email });
 
-    
-        if(user){ bcrypt.compare(password, user.password, (err, result) => {
-
-            if (err) {
-                req.flash("error", "Something went wrong.");
-                return res.redirect("/login");
-            }
-
-            if (!result) {
-                req.flash("error", "Invalid email or password.");
-                return res.redirect("/login");
-            }
-            const token = jwt.sign(
-                { email: user.email },
-                process.env.JWT_KEY
+        if (owner) {
+            const ownerPasswordMatched = await bcrypt.compare(
+                password,
+                owner.password
             );
-            res.cookie("token", token, {
-                httpOnly: true
-            });
-            console.log(process.env.NODE_ENV)
-            return res.redirect("/shop");
 
-        });}
+            if (ownerPasswordMatched) {
+                const token = jwt.sign(
+                    {
+                        id: owner._id,
+                        email: owner.email,
+                        role: "owner"
+                    },
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "7d"
+                    }
+                );
 
-        if(owner){
-            bcrypt.compare(password, owner.password, (err, result) => {
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
+                });
 
-            if (err) {
-                req.flash("error", "Something went wrong.");
-                return res.redirect("/login");
+                return res.redirect("/owners/admin");
             }
-
-            if (!result) {
-                req.flash("error", "Invalid email or password.");
-                return res.redirect("/login");
-            }
-            const token = jwt.sign(
-                { email: owner.email },
-                process.env.JWT_KEY
-            );
-            res.cookie("token", token, {
-                httpOnly: true
-            });
-            
-            return res.redirect("/owners/admin");
-
-        });
         }
-       
 
-    } catch (err) {
-        console.log(err);
-        req.flash("error", "Something went wrong.");
+        // Check normal user
+        const user = await userModel.findOne({ email });
+
+        if (user) {
+            const userPasswordMatched = await bcrypt.compare(
+                password,
+                user.password
+            );
+
+            if (userPasswordMatched) {
+                const token = jwt.sign(
+                    {
+                        id: user._id,
+                        email: user.email,
+                        role: "user"
+                    },
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "7d"
+                    }
+                );
+
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite: "lax",
+                    maxAge: 7 * 24 * 60 * 60 * 1000
+                });
+
+                return res.redirect("/shop");
+            }
+        }
+
+        req.flash("error", "Invalid email or password.");
+        return res.redirect("/login");
+
+    } catch (error) {
+        console.error("Login error:", error);
+
+        req.flash(
+            "error",
+            error.message || "Something went wrong."
+        );
+
         return res.redirect("/login");
     }
 };

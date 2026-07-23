@@ -1,18 +1,16 @@
-<%- include('./partials/header') %>
+<%- include("./partials/header") %>
 
-<div class="container-fluid bg-light min-vh-100">
+<div class="container-fluid auth-page p-0">
 
-    <div class="row min-vh-100 g-0">
+    <div class="row g-0">
 
-        <!-- Left Branding Section -->
-        <div class="col-lg-6 d-none d-lg-flex">
+        <!-- Desktop branding -->
 
-            <div
-                class="w-100 d-flex flex-column justify-content-center px-5 text-white"
-                style="background:#212529;"
-            >
+        <div class="col-lg-6 d-none d-lg-block">
 
-                <div class="px-xl-5">
+            <div class="auth-branding">
+
+                <div class="auth-branding-content">
 
                     <span class="badge bg-warning text-dark fs-6 px-3 py-2 mb-4">
                         SCATCH STORE
@@ -22,69 +20,66 @@
                         Create your account
                     </h1>
 
-                    <p class="fs-4 text-light mb-4">
+                    <p class="fs-4 text-light mb-5">
                         Join Scatch and explore premium products made for every style.
                     </p>
 
-                    <div class="d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center mb-4">
 
-                        <div
-                            class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
-                            style="width:48px;height:48px;font-size:22px;"
-                        >
+                        <div class="feature-icon me-3">
                             ✓
                         </div>
 
                         <div>
-                            <h5 class="mb-0 fw-bold">
+
+                            <h5 class="fw-bold mb-1">
                                 Simple Registration
                             </h5>
 
-                            <small class="text-light">
+                            <p class="text-light mb-0">
                                 Create your account in a few seconds.
-                            </small>
+                            </p>
+
                         </div>
 
                     </div>
 
-                    <div class="d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center mb-4">
 
-                        <div
-                            class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
-                            style="width:48px;height:48px;font-size:22px;"
-                        >
+                        <div class="feature-icon me-3">
                             ✓
                         </div>
 
                         <div>
-                            <h5 class="mb-0 fw-bold">
+
+                            <h5 class="fw-bold mb-1">
                                 Secure Access
                             </h5>
 
-                            <small class="text-light">
+                            <p class="text-light mb-0">
                                 Your account details remain protected.
-                            </small>
+                            </p>
+
                         </div>
 
                     </div>
 
                     <div class="d-flex align-items-center">
 
-                        <div
-                            class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
-                            style="width:48px;height:48px;font-size:22px;"
-                        >
+                        <div class="feature-icon me-3">
                             ✓
                         </div>
 
                         <div>
-                            <h5 class="mb-0 fw-bold">
+
+                            <h5 class="fw-bold mb-1">
                                 Better Shopping
                             </h5>
 
-                            <small class="text-light">
+                            <p class="text-light mb-0">
                                 Discover products and manage your experience.
-                            </small>
+                            </p>
+
                         </div>
 
                     </div>
@@ -95,16 +90,17 @@
 
         </div>
 
-        <!-- Registration Form Section -->
+        <!-- Form -->
+
         <div class="col-lg-6">
 
-            <div class="d-flex align-items-center justify-content-center min-vh-100 p-4">
+            <div class="auth-form-section">
 
-                <div style="width:100%;max-width:520px;">
+                <div class="auth-form-wrapper">
 
                     <div class="mb-4">
 
-                        <h2 class="display-6 fw-bold text-dark mb-2">
+                        <h2 class="display-6 fw-bold mb-2">
                             Create Account
                         </h2>
 
@@ -114,19 +110,39 @@
 
                     </div>
 
-                    <% if (typeof error !== "undefined" && error.length > 0) { %>
+                    <% if (
+                        typeof error !== "undefined" &&
+                        error &&
+                        error.length > 0
+                    ) { %>
 
-                        <div
-                            class="alert alert-danger border-0 shadow-sm rounded-3"
-                            role="alert"
-                        >
-                            <strong>Registration failed:</strong>
-                            <%= error %>
+                        <div class="alert alert-danger shadow-sm">
+
+                            <strong>
+                                Registration failed:
+                            </strong>
+
+                            <%= Array.isArray(error) ? error[0] : error %>
+
                         </div>
 
                     <% } %>
 
-                    <div class="card border-0 shadow-lg rounded-4">
+                    <% if (
+                        typeof success !== "undefined" &&
+                        success &&
+                        success.length > 0
+                    ) { %>
+
+                        <div class="alert alert-success shadow-sm">
+
+                            <%= Array.isArray(success) ? success[0] : success %>
+
+                        </div>
+
+                    <% } %>
+
+                    <div class="card auth-card">
 
                         <div class="card-body p-4 p-md-5">
 
@@ -143,15 +159,15 @@
 
                                     <div class="input-group input-group-lg">
 
-                                        <span class="input-group-text bg-white">
-                                            👤
+                                        <span class="input-group-text bg-white auth-icon-box">
+                                            <i class="ri-user-3-line"></i>
                                         </span>
 
                                         <input
                                             type="text"
                                             id="fullname"
-                                            class="form-control"
                                             name="fullName"
+                                            class="form-control"
                                             placeholder="Enter your full name"
                                             autocomplete="name"
                                             required
@@ -172,15 +188,15 @@
 
                                     <div class="input-group input-group-lg">
 
-                                        <span class="input-group-text bg-white">
-                                            ✉
+                                        <span class="input-group-text bg-white auth-icon-box">
+                                            <i class="ri-mail-line"></i>
                                         </span>
 
                                         <input
                                             type="email"
                                             id="email"
-                                            class="form-control"
                                             name="email"
+                                            class="form-control"
                                             placeholder="Enter your email"
                                             autocomplete="email"
                                             required
@@ -201,33 +217,42 @@
 
                                     <div class="input-group input-group-lg">
 
-                                        <span class="input-group-text bg-white">
-                                            🔒
+                                        <span class="input-group-text bg-white auth-icon-box">
+                                            <i class="ri-lock-line"></i>
                                         </span>
 
                                         <input
                                             type="password"
                                             id="password"
-                                            class="form-control"
                                             name="password"
+                                            class="form-control"
                                             placeholder="Enter your password"
                                             autocomplete="new-password"
+                                            minlength="6"
                                             required
                                         >
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-secondary password-toggle"
+                                            onclick="toggleRegisterPassword()"
+                                        >
+                                            Show
+                                        </button>
 
                                     </div>
 
                                     <div class="form-text mt-2">
-                                        Use a strong password that is difficult to guess.
+                                        Password must contain at least 6 characters.
                                     </div>
 
                                 </div>
 
-                                <div class="d-grid mb-4">
+                                <div class="d-grid">
 
                                     <button
                                         type="submit"
-                                        class="btn btn-warning btn-lg fw-semibold py-3"
+                                        class="btn btn-warning btn-lg fw-bold py-3"
                                     >
                                         Create Account
                                     </button>
@@ -241,7 +266,7 @@
                                 <hr>
 
                                 <span
-                                    class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted"
+                                    class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted text-center"
                                 >
                                     Already registered?
                                 </span>
@@ -263,7 +288,7 @@
 
                     </div>
 
-                    <p class="text-center text-muted small mt-4 mb-0">
+                    <p class="text-center text-muted small mt-4">
                         By creating an account, you agree to the Scatch Store terms and policies.
                     </p>
 
@@ -277,4 +302,30 @@
 
 </div>
 
-<%- include('./partials/footer') %>
+<script>
+
+    function toggleRegisterPassword() {
+
+        const password =
+            document.getElementById("password");
+
+        const button =
+            event.currentTarget;
+
+        if (password.type === "password") {
+
+            password.type = "text";
+            button.textContent = "Hide";
+
+        } else {
+
+            password.type = "password";
+            button.textContent = "Show";
+
+        }
+
+    }
+
+</script>
+
+<%- include("./partials/footer") %>
